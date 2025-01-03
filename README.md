@@ -1,5 +1,7 @@
 # PyAFPlus
 
+Ver 1.1.6
+
 PyAFPlus 是一个 Python 工具集合，提供了多种实用的扩展功能。
 
 ## 功能特性

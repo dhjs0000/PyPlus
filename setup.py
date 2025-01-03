@@ -1,12 +1,14 @@
 from setuptools import setup, find_packages
-import io
 
 setup(
     name="pyafplus",
-    version="0.1.4",
+    version="1.1.6",
+    packages=find_packages(),
+    install_requires=[],
     author="dhjs0000",
-    description="A collection of Python utility functions and extensions",
-    long_description=io.open("README.md", encoding="utf-8").read(),
+    author_email="dhjsllll@foxmail.com",
+    description="Python 工具集合，提供了多种实用的扩展功能",
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/dhjs0000/PyPlus",
     packages=find_packages(),
