@@ -9,6 +9,7 @@ PyAFPlus 是一个 Python 工具集合，提供了多种实用的扩展功能。
 - listplus: 列表扩展功能
 - bccmaths: 数学计算功能
 - strmaths: 字符串数学计算功能
+- progressplus: 高性能进度条功能
 
 ## 安装
 
@@ -23,6 +24,63 @@ pip install --upgrade pyafplus
 ```
 
 ## 各种模块的说明
+
+### progressplus
+
+提供了四种不同性能级别的进度条实现：
+
+1. **标准进度条** (`ProgressBar`)
+   - 提供丰富的自定义选项
+   - 支持前缀、后缀、自定义格式等
+   - 可显示百分比、耗时、计数等信息
+   ```python
+   from pyafplus import ProgressBar
+   bar = ProgressBar(total=100, prefix='Progress:', suffix='Complete', 
+                    show_time=True, show_count=True)
+   for i in range(100):
+       bar.update()
+   bar.finish()
+   ```
+
+2. **高速进度条** (`FastProgressBar`)
+   - 简化的功能，更快的速度
+   - 比标准进度条快 1.6 倍
+   ```python
+   from pyafplus import FastProgressBar
+   bar = FastProgressBar(total=100)
+   for i in range(100):
+       bar.update()
+   bar.finish()
+   ```
+
+3. **极速进度条** (`VFTProgressBar`)
+   - 只保留核心功能，追求极致性能
+   - 比标准进度条快 1.7 倍
+   ```python
+   from pyafplus import VFTProgressBar
+   bar = VFTProgressBar(total=100)
+   for i in range(100):
+       bar.update()
+   bar.finish()
+   ```
+
+4. **Rust 进度条** (`RustProgressBar`)
+   - 使用 Rust 实现的超高速进度条
+   - 比标准进度条快 4.7 倍
+   - 需要安装 Rust 工具链才能使用
+   ```python
+   from pyafplus import RustProgressBar
+   bar = RustProgressBar(total=100)
+   for i in range(100):
+       bar.update()
+   bar.finish()
+   ```
+
+性能对比（1000万次迭代）：
+- 标准进度条：4.61 秒
+- 高速进度条：2.84 秒（提升 1.62x）
+- 极速进度条：2.76 秒（提升 1.67x）
+- Rust 进度条：0.98 秒（提升 4.70x）
 
 ### dictplus
 `dictplus` 模块提供了对字典进行各种操作的扩展功能，包括：
@@ -68,11 +126,74 @@ pip install --upgrade pyafplus
 - 乘法：对两个字符串形式的数字进行乘法运算。
 - 除法：对两个字符串形式的数字进行除法运算，支持分数和小数模式。
 
+### progressplus
+`progressplus` 模块提供了两种进度条实现：
+- `ProgressBar`：标准进度条，提供丰富的自定义选项
+- `FastProgressBar`：高速进度条，提供基本功能但运行速度更快
+
 ## 使用示例
 提供了各个模块的使用示例，帮助用户快速上手。
+### progressplus
+
+#### 标准进度条示例
+```python
+from progressplus import ProgressBar
+import time
+
+# 基本用法
+total = 100
+bar = ProgressBar(total)
+for i in range(total):
+    # 做一些工作
+    time.sleep(0.1)
+    bar.update()
+
+# 自定义选项
+bar = ProgressBar(
+    total=50,
+    prefix='Progress:',
+    suffix='Complete',
+    decimals=2,
+    length=40,
+    fill='#',
+    empty='-',
+    show_time=True,
+    show_count=True
+)
+for i in range(50):
+    time.sleep(0.1)
+    bar.update()
+
+# 自定义格式化
+def custom_format(percent, data):
+    return f"Custom: |{data['bar']}| {percent:.1f}% [{data['time']:.1f}s]"
+
+bar = ProgressBar(
+    total=100,
+    custom_format=True,
+    custom_formatter=custom_format
+)
+for i in range(100):
+    time.sleep(0.1)
+    bar.update()
+```
+
+#### 高速进度条示例
+```python
+from progressplus import FastProgressBar
+
+# 适用于需要频繁更新的场景
+total = 1000000
+bar = FastProgressBar(total)
+for i in range(total):
+    # 高速操作
+    bar.update()
+```
+
 ### dictplus
 ```python
 from dictplus import DictPlus
+
 # 示例字典
 d1 = {'a': 1, 'b': 2}
 d2 = {'b': 3, 'c': 4}
@@ -88,6 +209,7 @@ print(deep_merged)  # 输出: {'a': {'b': 1, 'c': 2}}
 # 按键过滤字典
 filtered_by_keys = filter_by_keys({'a': 1, 'b': 2, 'c': 3}, ['a', 'c'])
 print(filtered_by_keys)  # 输出: {'a': 1, 'c': 3}
+
 
 # 按值过滤字典
 filtered_by_values = filter_by_values({'a': 1, 'b': 2, 'c': 3}, lambda x: x > 1)
@@ -408,6 +530,25 @@ print(result_div_decimal)  # 输出: 0.156456
 print(remainder)  # 输出: 0.0
 
 ```
+
+## Rust 进度条开发说明
+
+如果要使用 Rust 进度条，需要先安装 Rust 工具链：
+
+1. 安装 Rust：
+   - 访问 https://rustup.rs/
+   - 按照说明安装 Rust
+
+2. 编译 Rust 扩展：
+   ```bash
+   cd rust_progressbar
+   cargo build --release
+   ```
+
+3. 将编译好的库文件复制到 Python 包目录：
+   - Windows: 将 `target/release/rust_progressbar.dll` 复制为 `progressplus/rust_progressbar.pyd`
+   - Linux: 将 `target/release/librust_progressbar.so` 复制到 `progressplus` 目录
+   - macOS: 将 `target/release/librust_progressbar.dylib` 复制到 `progressplus` 目录
 
 ## 许可证
 
