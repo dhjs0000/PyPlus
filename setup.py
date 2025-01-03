@@ -3,7 +3,7 @@ import io
 
 setup(
     name="pyafplus",
-    version="0.1.1",
+    version="0.1.3",
     author="dhjs0000",
     description="A collection of Python utility functions and extensions",
     long_description=io.open("README.md", encoding="utf-8").read(),
