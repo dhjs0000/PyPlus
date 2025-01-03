@@ -1,13 +1,14 @@
 from setuptools import setup, find_packages
+import io
 
 setup(
-    name="pyplus",
-    version="0.1.0",
-    author="bbyc",
+    name="pyafplus",
+    version="0.1.1",
+    author="dhjs0000",
     description="A collection of Python utility functions and extensions",
-    long_description=open("README.md").read(),
+    long_description=io.open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/pyplus",  # 请替换为你的 GitHub 仓库地址
+    url="https://github.com/dhjs0000/PyPlus",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
